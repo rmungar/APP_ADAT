@@ -3,6 +3,7 @@ package com.es.aplicacion.controller
 import com.es.aplicacion.dto.LoginUsuarioDTO
 import com.es.aplicacion.dto.UsuarioDTO
 import com.es.aplicacion.dto.UsuarioRegisterDTO
+import com.es.aplicacion.error.exception.BadRequestException
 import com.es.aplicacion.error.exception.UnauthorizedException
 import com.es.aplicacion.service.TokenService
 import com.es.aplicacion.service.UsuarioService
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
@@ -32,11 +34,30 @@ class UsuarioController {
     fun insert(
         httpRequest: HttpServletRequest,
         @RequestBody usuarioRegisterDTO: UsuarioRegisterDTO
-    ) : ResponseEntity<UsuarioDTO>?{
+    ) : ResponseEntity<Any>?{
 
-        // TODO: Implementar este metodo
+        try {
+            val usuarioRegister = UsuarioRegisterDTO(
+                username = usuarioRegisterDTO.username,
+                email = usuarioRegisterDTO.email,
+                password = usuarioRegisterDTO.password,
+                passwordRepeat = usuarioRegisterDTO.passwordRepeat,
+                direccion = usuarioRegisterDTO.direccion,
+                rol = usuarioRegisterDTO.rol
 
-        return ResponseEntity(null, HttpStatus.CREATED)
+            )
+
+            val result = usuarioService.insertUser(usuarioRegister)
+
+            return ResponseEntity(result, HttpStatus.CREATED)
+
+        }
+        catch (e: UnauthorizedException) {
+            return ResponseEntity(e.message, HttpStatus.UNAUTHORIZED)
+        }
+        catch (e: BadRequestException) {
+            return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        }
 
     }
 

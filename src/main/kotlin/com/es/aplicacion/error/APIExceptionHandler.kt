@@ -1,5 +1,6 @@
 package com.es.aplicacion.error
 
+import com.es.aplicacion.error.exception.BadRequestException
 import com.es.aplicacion.error.exception.UnauthorizedException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
@@ -12,7 +13,7 @@ import javax.naming.AuthenticationException
 @ControllerAdvice
 class APIExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException::class, UnauthorizedException::class) // Las "clases" (excepciones) que se quieren controlar
+    @ExceptionHandler(AuthenticationException::class, UnauthorizedException::class, BadRequestException::class) // Las "clases" (excepciones) que se quieren controlar
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     fun handleAuthentication(request: HttpServletRequest, e: Exception) : ErrorRespuesta {
