@@ -59,6 +59,9 @@ class UsuarioController {
         catch (e: BadRequestException) {
             return ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
         }
+        catch (e: Exception) {
+            return ResponseEntity(e.message, HttpStatus.INTERNAL_SERVER_ERROR)
+        }
 
     }
 
